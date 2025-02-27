@@ -5502,7 +5502,7 @@ ObservationGracePeriod = '1s'
 
 [OCR2]
 [OCR2.Automation]
-GasLimit = 6000000
+GasLimit = 11000000
 
 [Workflow]
 GasLimitDefault = 400000
@@ -5614,7 +5614,7 @@ ObservationGracePeriod = '1s'
 
 [OCR2]
 [OCR2.Automation]
-GasLimit = 6000000
+GasLimit = 11000000
 
 [Workflow]
 GasLimitDefault = 400000
@@ -6355,6 +6355,10 @@ TransactionPercentile = 60
 
 [GasEstimator.FeeHistory]
 CacheTimeout = '10s'
+
+[GasEstimator.DAOracle]
+OracleType = 'opstack'
+OracleAddress = '0x420000000000000000000000000000000000000F'
 
 [HeadTracker]
 HistoryDepth = 100
@@ -11095,6 +11099,10 @@ TransactionPercentile = 60
 
 [GasEstimator.FeeHistory]
 CacheTimeout = '10s'
+
+[GasEstimator.DAOracle]
+OracleType = 'opstack'
+OracleAddress = '0x420000000000000000000000000000000000000F'
 
 [HeadTracker]
 HistoryDepth = 100

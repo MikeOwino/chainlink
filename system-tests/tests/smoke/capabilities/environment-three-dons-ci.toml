@@ -4,8 +4,7 @@
   docker_cmd_params = ["-b", "5"]
 
 [jd]
-  # change to your version
-  image = "job-distributor:latest"
+  image = "injected-at-runtime"
 
 [workflow_config]
   workflow_name = "abcdefgasd"
@@ -13,7 +12,6 @@
 
   use_cre_cli = true
   should_compile_new_workflow = false
-  # workflow_folder_location = "path-to-folder-with-main.go-of-your-workflow"
 
   [workflow_config.dependencies]
   capabilities_version = "v1.0.0-alpha"
@@ -21,7 +19,7 @@
 
   [workflow_config.compiled_config]
     binary_url = "https://gist.githubusercontent.com/Tofel/73d703157bafe65ab51f7e619c589091/raw/cb7b2a56b37e333fe0bdce07b79538c4ce332f5f/binary.wasm.br"
-    config_url = "https://gist.githubusercontent.com/Tofel/a261990c5b177fe58f304a52d0998e51/raw/2e28ee10feacf4e451a38fdfbdff8a38cf2628d8/config.json2891974493"
+    config_url = "https://gist.githubusercontent.com/Tofel/3635532a08bccd0adae54794e449f810/raw/b3cf08909153fe469b063f9870ac40ad2a70d768/three-dons-config.json_2025_02_26"
 
 [[nodesets]]
   nodes = 5
@@ -37,8 +35,7 @@
   [[nodesets.node_specs]]
 
     [nodesets.node_specs.node]
-      docker_ctx = "../../../.."
-      docker_file = "plugins/chainlink.Dockerfile"
+      image = "injected-at-runtime"
       user_config_overrides = """
       [Feature]
 			LogPoller = true
@@ -55,8 +52,7 @@
   [[nodesets.node_specs]]
 
     [nodesets.node_specs.node]
-      docker_ctx = "../../../.."
-      docker_file = "plugins/chainlink.Dockerfile"
+      image = "injected-at-runtime"
       capabilities = ["./amd64_cron"]
       user_config_overrides = """
       [Feature]
@@ -74,8 +70,7 @@
   [[nodesets.node_specs]]
 
     [nodesets.node_specs.node]
-      docker_ctx = "../../../.."
-      docker_file = "plugins/chainlink.Dockerfile"
+      image = "injected-at-runtime"
       capabilities = ["./amd64_cron"]
       user_config_overrides = """
       [Feature]
@@ -93,8 +88,7 @@
   [[nodesets.node_specs]]
 
     [nodesets.node_specs.node]
-      docker_ctx = "../../../.."
-      docker_file = "plugins/chainlink.Dockerfile"
+      image = "injected-at-runtime"
       capabilities = ["./amd64_cron"]
       user_config_overrides = """
       [Feature]
@@ -112,8 +106,7 @@
   [[nodesets.node_specs]]
 
     [nodesets.node_specs.node]
-      docker_ctx = "../../../.."
-      docker_file = "plugins/chainlink.Dockerfile"
+      image = "injected-at-runtime"
       capabilities = ["./amd64_cron"]
       user_config_overrides = """
       [Feature]
@@ -142,8 +135,7 @@
   [[nodesets.node_specs]]
 
     [nodesets.node_specs.node]
-      docker_ctx = "../../../.."
-      docker_file = "plugins/chainlink.Dockerfile"
+      image = "injected-at-runtime"
       user_config_overrides = """
       [Feature]
 			LogPoller = true
@@ -160,8 +152,7 @@
   [[nodesets.node_specs]]
 
     [nodesets.node_specs.node]
-      docker_ctx = "../../../.."
-      docker_file = "plugins/chainlink.Dockerfile"
+      image = "injected-at-runtime"
       user_config_overrides = """
       [Feature]
 			LogPoller = true
@@ -178,8 +169,34 @@
   [[nodesets.node_specs]]
 
     [nodesets.node_specs.node]
-      docker_ctx = "../../../.."
-      docker_file = "plugins/chainlink.Dockerfile"
+      image = "injected-at-runtime"
+      user_config_overrides = """
+      [Feature]
+			LogPoller = true
+
+			[OCR2]
+			Enabled = true
+			DatabaseTimeout = '1s'
+
+			[P2P.V2]
+			Enabled = true
+			ListenAddresses = ['0.0.0.0:5001']
+      """
+
+[[nodesets]]
+  nodes = 1
+  override_mode = "each"
+  http_port_range_start = 10300
+  name = "gateway"
+
+  [nodesets.db]
+    image = "postgres:12.0"
+    port = 13200
+
+  [[nodesets.node_specs]]
+
+    [nodesets.node_specs.node]
+      image = "injected-at-runtime"
       user_config_overrides = """
       [Feature]
 			LogPoller = true

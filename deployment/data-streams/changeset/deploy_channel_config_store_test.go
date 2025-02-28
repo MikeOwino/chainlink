@@ -5,15 +5,15 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/smartcontractkit/chainlink/deployment/llo"
+	"github.com/smartcontractkit/chainlink/deployment/common/types"
 )
 
-func TestDeployChannelConfigStoreChangeSet(t *testing.T) {
+func TestDeployChannelConfigStore(t *testing.T) {
 	e := newMemoryEnv(t)
-	c := llo.DeployLLOContractConfig{
+	cc := DeployChannelConfigStoreConfig{
 		ChainsToDeploy: []uint64{TestChain.Selector},
 	}
-	out, err := DeployChannelConfigStoreChangeSet(e, c)
+	out, err := DeployChannelConfigStore{}.Apply(e, cc)
 	require.NoError(t, err)
 
 	ab, err := out.AddressBook.Addresses()
@@ -23,7 +23,7 @@ func TestDeployChannelConfigStoreChangeSet(t *testing.T) {
 	for sel, addrMap := range ab {
 		require.Equal(t, TestChain.Selector, sel)
 		for _, tv := range addrMap {
-			require.Equal(t, tv.Type, llo.ChannelConfigStore)
+			require.Equal(t, types.ChannelConfigStore, tv.Type)
 		}
 	}
 }

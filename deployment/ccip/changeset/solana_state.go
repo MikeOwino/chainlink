@@ -16,6 +16,8 @@ import (
 	solOffRamp "github.com/smartcontractkit/chainlink-ccip/chains/solana/gobindings/ccip_offramp"
 	"github.com/smartcontractkit/chainlink-ccip/chains/solana/gobindings/ccip_router"
 	"github.com/smartcontractkit/chainlink-ccip/chains/solana/gobindings/fee_quoter"
+	solTestTokenPool "github.com/smartcontractkit/chainlink-ccip/chains/solana/gobindings/test_token_pool"
+	solTokenUtil "github.com/smartcontractkit/chainlink-ccip/chains/solana/utils/tokens"
 
 	"github.com/smartcontractkit/chainlink/deployment"
 	commoncs "github.com/smartcontractkit/chainlink/deployment/common/changeset"
@@ -268,6 +270,7 @@ func ValidateOwnershipSolana(
 	mcms bool,
 	programID solana.PublicKey,
 	contractType deployment.ContractType,
+	tokenAddress solana.PublicKey, // for token pools only
 ) error {
 	addresses, err := e.ExistingAddresses.AddressesForChain(chain.Selector)
 	if err != nil {
@@ -309,6 +312,28 @@ func ValidateOwnershipSolana(
 		}
 		if err := commoncs.ValidateOwnershipSolanaCommon(mcms, chain.DeployerKey.PublicKey(), timelockSignerPDA, programData.Owner); err != nil {
 			return fmt.Errorf("failed to validate ownership for feequoter: %w", err)
+		}
+	case BurnMintTokenPool:
+		programData := solTestTokenPool.State{}
+		poolConfigPDA, _ := solTokenUtil.TokenPoolConfigAddress(tokenAddress, programID)
+		err = chain.GetAccountDataBorshInto(e.GetContext(), poolConfigPDA, &programData)
+		if err != nil {
+			e.Logger.Warnf("BurnMintTokenPool not configured with this token address: %s", tokenAddress.String())
+			return nil
+		}
+		if err := commoncs.ValidateOwnershipSolanaCommon(mcms, chain.DeployerKey.PublicKey(), timelockSignerPDA, programData.Config.Owner); err != nil {
+			return fmt.Errorf("failed to validate ownership for example_burnmint_token_pool: %w", err)
+		}
+	case LockReleaseTokenPool:
+		programData := solTestTokenPool.State{}
+		poolConfigPDA, _ := solTokenUtil.TokenPoolConfigAddress(tokenAddress, programID)
+		err = chain.GetAccountDataBorshInto(e.GetContext(), poolConfigPDA, &programData)
+		if err != nil {
+			e.Logger.Warnf("LockReleaseTokenPool not configured with this token address: %s", tokenAddress.String())
+			return nil
+		}
+		if err := commoncs.ValidateOwnershipSolanaCommon(mcms, chain.DeployerKey.PublicKey(), timelockSignerPDA, programData.Config.Owner); err != nil {
+			return fmt.Errorf("failed to validate ownership for example_lockrelease_token_pool: %w", err)
 		}
 	default:
 		return fmt.Errorf("unsupported contract type: %s", contractType)
